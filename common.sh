@@ -45,6 +45,24 @@ function main_eval_param()
     return 0
 }
 
+function switchgo() {
+	local version=$1
+	if [ -z $version ]; then
+		echo "Usage: switchgo [version]"
+		return
+	fi
+
+	if ! command -v "go$version" > /dev/null 2>&1; then
+		echo "Go ${version} doesn't exist, start downloading..."
+		go get golang.org/dl/go${version}
+		go${version} download
+	fi
+
+	ln -sf "$(command -v "go$version")" "$GOBIN/go"
+
+	echo "Switched to Go ${version}"
+}
+
 function star()
 {
     echo "start"
